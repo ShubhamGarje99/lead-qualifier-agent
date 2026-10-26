@@ -1,0 +1,1388 @@
+{
+  "mode": "offline",
+  "run_at": "2026-10-26T18:50:57+00:00",
+  "git_commit": "5390410",
+  "model": null,
+  "judge_model": null,
+  "n_leads": 20,
+  "wall_time_s": 0.36,
+  "tier_metrics": {
+    "accuracy": 0.55,
+    "macro_f1": 0.542,
+    "per_class": {
+      "A": {
+        "precision": 1.0,
+        "recall": 0.667,
+        "f1": 0.8,
+        "support": 6
+      },
+      "B": {
+        "precision": 0.5,
+        "recall": 0.6,
+        "f1": 0.545,
+        "support": 5
+      },
+      "C": {
+        "precision": 0.2,
+        "recall": 0.25,
+        "f1": 0.222,
+        "support": 4
+      },
+      "disqualified": {
+        "precision": 0.6,
+        "recall": 0.6,
+        "f1": 0.6,
+        "support": 5
+      }
+    },
+    "confusion": {
+      "A": {
+        "A": 4,
+        "B": 1,
+        "C": 1,
+        "disqualified": 0
+      },
+      "B": {
+        "A": 0,
+        "B": 3,
+        "C": 2,
+        "disqualified": 0
+      },
+      "C": {
+        "A": 0,
+        "B": 1,
+        "C": 1,
+        "disqualified": 2
+      },
+      "disqualified": {
+        "A": 0,
+        "B": 1,
+        "C": 1,
+        "disqualified": 3
+      }
+    },
+    "n": 20
+  },
+  "email": {
+    "n_drafts": 15,
+    "all_checks_pass_rate": 0.8,
+    "per_check": {
+      "mentions_company": 1.0,
+      "homepage_detail": 0.8,
+      "has_cta": 1.0,
+      "length_ok": 1.0,
+      "no_placeholders": 1.0,
+      "no_invented_claims": 1.0,
+      "grounded_mentions": 1.0
+    }
+  },
+  "judge": {
+    "n": 0,
+    "mean": null
+  },
+  "cost": {
+    "pipeline_usd": 0,
+    "judge_usd": 0.0,
+    "pipeline_per_lead_usd": 0.0,
+    "input_tokens": 0,
+    "output_tokens": 0
+  },
+  "rows": [
+    {
+      "id": "E01",
+      "company": "Brightwave Billing",
+      "expected": "A",
+      "predicted": "A",
+      "correct": true,
+      "score": 85.0,
+      "why_expected": "Fintech SaaS, 85 people, US, B2B; explicit call ask, money set aside, Q1 deadline; routing + follow-up pains; Salesforce/Slack.",
+      "score_summary": "Tier A (85/100); strongest: buying_intent 25/25, industry_fit 15/15",
+      "criteria": {
+        "industry_fit": 15.0,
+        "company_size": 15.0,
+        "business_model": 10.0,
+        "region": 5.0,
+        "buying_intent": 25.0,
+        "pain_fit": 0.0,
+        "budget": 10.0,
+        "tech_stack": 5.0
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "saas",
+        "employee_band": "51-200",
+        "region": "north_america",
+        "business_model": "b2b",
+        "buying_intent": "high",
+        "budget": "stated",
+        "pain_points": [],
+        "tech_stack": [
+          "salesforce",
+          "segment",
+          "slack",
+          "stripe"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "awaiting_review",
+      "error": null,
+      "latency_s": 0.031,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": {
+        "subject": "Re: your inquiry at Brightwave Billing",
+        "body": "Hi Daniel,\n\nThanks for reaching out about automating parts of your workflow. I had a look at Brightwave Billing's site: \"Billing that keeps up with your pricing page\" is a clear pitch, and \"From quote to cash\" stood out.\n\nAcme Automation builds small, tested automations for B2B revenue and operations teams, with a human approval step so nothing goes out without your sign-off. Since you mentioned Salesforce and Slack, we would plug into what you already use. Thanks also for sharing your budget and timeline; that makes it much easier to scope.\n\nWould you be open to a 30-minute call this week to map out a first version? You can grab a slot here: https://cal.example.com/acme-automation/intro\n\nBest,\nJordan\nAcme Automation",
+        "generated_by": "template",
+        "model": null
+      },
+      "email_checks": {
+        "checks": {
+          "mentions_company": true,
+          "homepage_detail": true,
+          "has_cta": true,
+          "length_ok": true,
+          "no_placeholders": true,
+          "no_invented_claims": true,
+          "grounded_mentions": true
+        },
+        "passed": true,
+        "word_count": 119,
+        "homepage_facts_hit": [
+          "billing",
+          "quote to cash",
+          "pricing page"
+        ],
+        "invented_claims": [],
+        "placeholders": [],
+        "ungrounded_mentions": []
+      },
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E02",
+      "company": "Quillstack",
+      "expected": "A",
+      "predicted": "C",
+      "correct": false,
+      "score": 67.5,
+      "why_expected": "Devtools SaaS, team of 60, Ireland, B2B; proposal + pricing ask with a 6-week pilot timeline; support triage in Zendesk. Tricky: 'two of us spend' describes workload, not headcount.",
+      "score_summary": "Tier C (68/100); strongest: buying_intent 25/25, industry_fit 15/15; capped B -> C: Below minimum company size (1-10 people); low-touch nurture only.",
+      "criteria": {
+        "industry_fit": 15.0,
+        "company_size": 0.0,
+        "business_model": 0.0,
+        "region": 5.0,
+        "buying_intent": 25.0,
+        "pain_fit": 15.0,
+        "budget": 5.0,
+        "tech_stack": 2.5
+      },
+      "caps": [
+        "capped B -> C: Below minimum company size (1-10 people); low-touch nurture only."
+      ],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "devtools",
+        "employee_band": "1-10",
+        "region": "europe",
+        "business_model": "unknown",
+        "buying_intent": "high",
+        "budget": "implied",
+        "pain_points": [
+          "support_triage",
+          "data_entry"
+        ],
+        "tech_stack": [
+          "segment",
+          "zendesk"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "awaiting_review",
+      "error": null,
+      "latency_s": 0.015,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": {
+        "subject": "Re: support-ticket triage at Quillstack",
+        "body": "Hi Aoife,\n\nThanks for reaching out about support-ticket triage and manual data entry. I had a look at Quillstack's site: \"Developer docs your users actually read\" is a clear pitch, and \"Built for API-first companies\" stood out.\n\nAcme Automation builds small, tested automations for exactly this kind of work: an agent handles the repetitive part of support-ticket triage and manual data entry, and a person on your team approves anything before it goes out. Since you mentioned Zendesk, we would plug into what you already use.\n\nIf it would help, I can send over a short write-up of how we would approach this. Just reply and I will send it across.\n\nBest,\nJordan\nAcme Automation",
+        "generated_by": "template",
+        "model": null
+      },
+      "email_checks": {
+        "checks": {
+          "mentions_company": true,
+          "homepage_detail": true,
+          "has_cta": true,
+          "length_ok": true,
+          "no_placeholders": true,
+          "no_invented_claims": true,
+          "grounded_mentions": true
+        },
+        "passed": true,
+        "word_count": 115,
+        "homepage_facts_hit": [
+          "developer docs"
+        ],
+        "invented_claims": [],
+        "placeholders": [],
+        "ungrounded_mentions": []
+      },
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E03",
+      "company": "Harborline Freight",
+      "expected": "A",
+      "predicted": "B",
+      "correct": false,
+      "score": 62.5,
+      "why_expected": "Freight tech, 210 employees, US, B2B; approved budget (~$30k), meeting ask; intake/routing + re-keying into HubSpot.",
+      "score_summary": "Tier B (62/100); strongest: industry_fit 15/15, company_size 15/15",
+      "criteria": {
+        "industry_fit": 15.0,
+        "company_size": 15.0,
+        "business_model": 0.0,
+        "region": 5.0,
+        "buying_intent": 15.0,
+        "pain_fit": 0.0,
+        "budget": 10.0,
+        "tech_stack": 2.5
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "logistics_tech",
+        "employee_band": "201-500",
+        "region": "north_america",
+        "business_model": "unknown",
+        "buying_intent": "medium",
+        "budget": "stated",
+        "pain_points": [],
+        "tech_stack": [
+          "hubspot"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "awaiting_review",
+      "error": null,
+      "latency_s": 0.016,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": {
+        "subject": "Re: your inquiry at Harborline Freight",
+        "body": "Hi Marcus,\n\nThanks for reaching out about automating parts of your workflow. I had a look at Harborline Freight's site: \"Instant truckload quotes. Real-time visibility\" is a clear pitch, and \"Technology that moves freight\" stood out.\n\nAcme Automation builds small, tested automations for B2B revenue and operations teams, with a human approval step so nothing goes out without your sign-off. Since you mentioned HubSpot, we would plug into what you already use.\n\nWould a 20-minute intro call next week be useful? If so, pick any time that suits you: https://cal.example.com/acme-automation/intro\n\nBest,\nJordan\nAcme Automation",
+        "generated_by": "template",
+        "model": null
+      },
+      "email_checks": {
+        "checks": {
+          "mentions_company": true,
+          "homepage_detail": true,
+          "has_cta": true,
+          "length_ok": true,
+          "no_placeholders": true,
+          "no_invented_claims": true,
+          "grounded_mentions": true
+        },
+        "passed": true,
+        "word_count": 94,
+        "homepage_facts_hit": [
+          "truckload",
+          "quote",
+          "freight"
+        ],
+        "invented_claims": [],
+        "placeholders": [],
+        "ungrounded_mentions": []
+      },
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E04",
+      "company": "Nimbus Care",
+      "expected": "A",
+      "predicted": "A",
+      "correct": true,
+      "score": 77.5,
+      "why_expected": "Healthtech SaaS for clinics, team of 45, Australia, B2B; call ask + live-within-a-month timeline; round-robin routing and follow-up pains. No budget stated.",
+      "score_summary": "Tier A (78/100); strongest: industry_fit 15/15, company_size 15/15",
+      "criteria": {
+        "industry_fit": 15.0,
+        "company_size": 15.0,
+        "business_model": 10.0,
+        "region": 5.0,
+        "buying_intent": 15.0,
+        "pain_fit": 15.0,
+        "budget": 0.0,
+        "tech_stack": 2.5
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "healthtech",
+        "employee_band": "11-50",
+        "region": "anz",
+        "business_model": "b2b",
+        "buying_intent": "medium",
+        "budget": "none",
+        "pain_points": [
+          "lead_routing",
+          "manual_follow_up"
+        ],
+        "tech_stack": [
+          "intercom"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "awaiting_review",
+      "error": null,
+      "latency_s": 0.016,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": {
+        "subject": "Re: inbound lead routing at Nimbus Care",
+        "body": "Hi Olivia,\n\nThanks for reaching out about inbound lead routing and manual follow-ups. I had a look at Nimbus Care's site: \"Run your physio clinic, not your admin\" is a clear pitch, and \"Everything your clinic needs\" stood out.\n\nAcme Automation builds small, tested automations for exactly this kind of work: an agent handles the repetitive part of inbound lead routing and manual follow-ups, and a person on your team approves anything before it goes out.\n\nWould you be open to a 30-minute call this week to map out a first version? You can grab a slot here: https://cal.example.com/acme-automation/intro\n\nBest,\nJordan\nAcme Automation",
+        "generated_by": "template",
+        "model": null
+      },
+      "email_checks": {
+        "checks": {
+          "mentions_company": true,
+          "homepage_detail": true,
+          "has_cta": true,
+          "length_ok": true,
+          "no_placeholders": true,
+          "no_invented_claims": true,
+          "grounded_mentions": true
+        },
+        "passed": true,
+        "word_count": 103,
+        "homepage_facts_hit": [
+          "physio",
+          "clinic"
+        ],
+        "invented_claims": [],
+        "placeholders": [],
+        "ungrounded_mentions": []
+      },
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E05",
+      "company": "Ledgerly",
+      "expected": "A",
+      "predicted": "A",
+      "correct": true,
+      "score": 100.0,
+      "why_expected": "Fintech (spend management), 150 people, UK, B2B; budget allocated this quarter, meeting ask; CRM duplicates + reporting; Salesforce/Slack.",
+      "score_summary": "Tier A (100/100); strongest: buying_intent 25/25, industry_fit 15/15",
+      "criteria": {
+        "industry_fit": 15.0,
+        "company_size": 15.0,
+        "business_model": 10.0,
+        "region": 5.0,
+        "buying_intent": 25.0,
+        "pain_fit": 15.0,
+        "budget": 10.0,
+        "tech_stack": 5.0
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "fintech",
+        "employee_band": "51-200",
+        "region": "uk",
+        "business_model": "b2b",
+        "buying_intent": "high",
+        "budget": "stated",
+        "pain_points": [
+          "crm_hygiene",
+          "reporting"
+        ],
+        "tech_stack": [
+          "hubspot",
+          "salesforce",
+          "segment",
+          "slack"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "awaiting_review",
+      "error": null,
+      "latency_s": 0.016,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": {
+        "subject": "Re: CRM data quality at Ledgerly",
+        "body": "Hi Rahul,\n\nThanks for reaching out about CRM data quality and reporting. I had a look at Ledgerly's site: \"Control spend before it happens\" is a clear pitch, and \"Why finance teams switch to Ledgerly\" stood out.\n\nAcme Automation builds small, tested automations for exactly this kind of work: an agent handles the repetitive part of CRM data quality and reporting, and a person on your team approves anything before it goes out. Since you mentioned Salesforce and Slack, we would plug into what you already use. Thanks also for sharing your budget and timeline; that makes it much easier to scope.\n\nWould you be open to a 30-minute call this week to map out a first version? You can grab a slot here: https://cal.example.com/acme-automation/intro\n\nBest,\nJordan\nAcme Automation",
+        "generated_by": "template",
+        "model": null
+      },
+      "email_checks": {
+        "checks": {
+          "mentions_company": true,
+          "homepage_detail": true,
+          "has_cta": true,
+          "length_ok": true,
+          "no_placeholders": true,
+          "no_invented_claims": true,
+          "grounded_mentions": true
+        },
+        "passed": true,
+        "word_count": 129,
+        "homepage_facts_hit": [
+          "spend"
+        ],
+        "invented_claims": [],
+        "placeholders": [],
+        "ungrounded_mentions": []
+      },
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E06",
+      "company": "Orbitly",
+      "expected": "A",
+      "predicted": "A",
+      "correct": true,
+      "score": 90.0,
+      "why_expected": "Martech platform, 300 employees, Canada, sells to brands (B2B); evaluating vendors, ~$40k budget, end-of-March deadline, call ask; lead qualification pain.",
+      "score_summary": "Tier A (90/100); strongest: buying_intent 25/25, industry_fit 15/15",
+      "criteria": {
+        "industry_fit": 15.0,
+        "company_size": 15.0,
+        "business_model": 10.0,
+        "region": 5.0,
+        "buying_intent": 25.0,
+        "pain_fit": 7.5,
+        "budget": 10.0,
+        "tech_stack": 2.5
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "martech",
+        "employee_band": "201-500",
+        "region": "north_america",
+        "business_model": "b2b",
+        "buying_intent": "high",
+        "budget": "stated",
+        "pain_points": [
+          "lead_routing"
+        ],
+        "tech_stack": [
+          "hubspot",
+          "segment"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "awaiting_review",
+      "error": null,
+      "latency_s": 0.017,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": {
+        "subject": "Re: inbound lead routing at Orbitly",
+        "body": "Hi Jenna,\n\nThanks for reaching out about inbound lead routing. I had a look at Orbitly's site: \"Every customer message, perfectly timed\" is a clear pitch, and \"The engagement platform for growth teams\" stood out.\n\nAcme Automation builds small, tested automations for exactly this kind of work: an agent handles the repetitive part of inbound lead routing, and a person on your team approves anything before it goes out. Thanks also for sharing your budget and timeline; that makes it much easier to scope.\n\nWould you be open to a 30-minute call this week to map out a first version? You can grab a slot here: https://cal.example.com/acme-automation/intro\n\nBest,\nJordan\nAcme Automation",
+        "generated_by": "template",
+        "model": null
+      },
+      "email_checks": {
+        "checks": {
+          "mentions_company": true,
+          "homepage_detail": false,
+          "has_cta": true,
+          "length_ok": true,
+          "no_placeholders": true,
+          "no_invented_claims": true,
+          "grounded_mentions": true
+        },
+        "passed": false,
+        "word_count": 111,
+        "homepage_facts_hit": [],
+        "invented_claims": [],
+        "placeholders": [],
+        "ungrounded_mentions": []
+      },
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E07",
+      "company": "Tessellate",
+      "expected": "B",
+      "predicted": "B",
+      "correct": true,
+      "score": 52.5,
+      "why_expected": "Tricky: ideal-ICP company (B2B procurement SaaS, 120 people, Netherlands, HubSpot) but a vague, no-ask message. Fit alone should land B, not A.",
+      "score_summary": "Tier B (52/100); strongest: industry_fit 15/15, company_size 15/15",
+      "criteria": {
+        "industry_fit": 15.0,
+        "company_size": 15.0,
+        "business_model": 10.0,
+        "region": 5.0,
+        "buying_intent": 5.0,
+        "pain_fit": 0.0,
+        "budget": 0.0,
+        "tech_stack": 2.5
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "saas",
+        "employee_band": "51-200",
+        "region": "europe",
+        "business_model": "b2b",
+        "buying_intent": "low",
+        "budget": "none",
+        "pain_points": [],
+        "tech_stack": [
+          "hubspot"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "awaiting_review",
+      "error": null,
+      "latency_s": 0.015,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": {
+        "subject": "Re: your inquiry at Tessellate",
+        "body": "Hi Pieter,\n\nThanks for reaching out about automating parts of your workflow. I had a look at Tessellate's site: \"Procurement your whole company will actually use\" is a clear pitch, and \"Fewer rogue purchases, faster approvals\" stood out.\n\nAcme Automation builds small, tested automations for B2B revenue and operations teams, with a human approval step so nothing goes out without your sign-off.\n\nWould a 20-minute intro call next week be useful? If so, pick any time that suits you: https://cal.example.com/acme-automation/intro\n\nBest,\nJordan\nAcme Automation",
+        "generated_by": "template",
+        "model": null
+      },
+      "email_checks": {
+        "checks": {
+          "mentions_company": true,
+          "homepage_detail": true,
+          "has_cta": true,
+          "length_ok": true,
+          "no_placeholders": true,
+          "no_invented_claims": true,
+          "grounded_mentions": true
+        },
+        "passed": true,
+        "word_count": 84,
+        "homepage_facts_hit": [
+          "procurement",
+          "purchase",
+          "approvals"
+        ],
+        "invented_claims": [],
+        "placeholders": [],
+        "ungrounded_mentions": []
+      },
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E08",
+      "company": "Granite Systems",
+      "expected": "B",
+      "predicted": "B",
+      "correct": true,
+      "score": 62.5,
+      "why_expected": "Enterprise SaaS (4,000+ staff, partial size credit), US, B2B; concrete data-entry problem but research phase, no timeline or budget.",
+      "score_summary": "Tier B (62/100); strongest: industry_fit 15/15, buying_intent 15/25",
+      "criteria": {
+        "industry_fit": 15.0,
+        "company_size": 7.5,
+        "business_model": 10.0,
+        "region": 5.0,
+        "buying_intent": 15.0,
+        "pain_fit": 7.5,
+        "budget": 0.0,
+        "tech_stack": 2.5
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "saas",
+        "employee_band": "1001+",
+        "region": "north_america",
+        "business_model": "b2b",
+        "buying_intent": "medium",
+        "budget": "none",
+        "pain_points": [
+          "data_entry"
+        ],
+        "tech_stack": [
+          "salesforce",
+          "segment"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "awaiting_review",
+      "error": null,
+      "latency_s": 0.014,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": {
+        "subject": "Re: manual data entry at Granite Systems",
+        "body": "Hi Linda,\n\nThanks for reaching out about manual data entry. I had a look at Granite Systems' site: \"The workforce platform for the enterprise\" is a clear pitch, and \"Built for global organisations\" stood out.\n\nAcme Automation builds small, tested automations for exactly this kind of work: an agent handles the repetitive part of manual data entry, and a person on your team approves anything before it goes out. Since you mentioned Salesforce, we would plug into what you already use.\n\nWould a 20-minute intro call next week be useful? If so, pick any time that suits you: https://cal.example.com/acme-automation/intro\n\nBest,\nJordan\nAcme Automation",
+        "generated_by": "template",
+        "model": null
+      },
+      "email_checks": {
+        "checks": {
+          "mentions_company": true,
+          "homepage_detail": true,
+          "has_cta": true,
+          "length_ok": true,
+          "no_placeholders": true,
+          "no_invented_claims": true,
+          "grounded_mentions": true
+        },
+        "passed": true,
+        "word_count": 103,
+        "homepage_facts_hit": [
+          "workforce",
+          "enterprise"
+        ],
+        "invented_claims": [],
+        "placeholders": [],
+        "ungrounded_mentions": []
+      },
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E09",
+      "company": "Kestrel Advisory",
+      "expected": "B",
+      "predicted": "C",
+      "correct": false,
+      "score": 40.0,
+      "why_expected": "Accounting firm (adjacent industry), 70 people, UK, B2B; forgotten enquiries + follow-ups; asks about cost (implied budget), no timeline.",
+      "score_summary": "Tier C (40/100); strongest: buying_intent 15/25, industry_fit 7.5/15",
+      "criteria": {
+        "industry_fit": 7.5,
+        "company_size": 0.0,
+        "business_model": 0.0,
+        "region": 5.0,
+        "buying_intent": 15.0,
+        "pain_fit": 7.5,
+        "budget": 5.0,
+        "tech_stack": 0.0
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "professional_services",
+        "employee_band": "unknown",
+        "region": "uk",
+        "business_model": "unknown",
+        "buying_intent": "medium",
+        "budget": "implied",
+        "pain_points": [
+          "manual_follow_up"
+        ],
+        "tech_stack": [
+          "wordpress"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "awaiting_review",
+      "error": null,
+      "latency_s": 0.013,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": {
+        "subject": "Re: manual follow-ups at Kestrel Advisory",
+        "body": "Hi Hannah,\n\nThanks for reaching out about manual follow-ups. I had a look at Kestrel Advisory's site: \"Accountants who help you grow\" is a clear pitch, and \"Accounts and tax\" stood out.\n\nAcme Automation builds small, tested automations for exactly this kind of work: an agent handles the repetitive part of manual follow-ups, and a person on your team approves anything before it goes out.\n\nIf it would help, I can send over a short write-up of how we would approach this. Just reply and I will send it across.\n\nBest,\nJordan\nAcme Automation",
+        "generated_by": "template",
+        "model": null
+      },
+      "email_checks": {
+        "checks": {
+          "mentions_company": true,
+          "homepage_detail": true,
+          "has_cta": true,
+          "length_ok": true,
+          "no_placeholders": true,
+          "no_invented_claims": true,
+          "grounded_mentions": true
+        },
+        "passed": true,
+        "word_count": 94,
+        "homepage_facts_hit": [
+          "accountants",
+          "tax",
+          "advisory"
+        ],
+        "invented_claims": [],
+        "placeholders": [],
+        "ungrounded_mentions": []
+      },
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E10",
+      "company": "Fernway",
+      "expected": "B",
+      "predicted": "B",
+      "correct": true,
+      "score": 50.0,
+      "why_expected": "Field-service SaaS, 35 people, Portugal, B2B; one pain (spreadsheets), soft 'happy to chat at some point', no budget/timeline.",
+      "score_summary": "Tier B (50/100); strongest: industry_fit 15/15, company_size 15/15",
+      "criteria": {
+        "industry_fit": 15.0,
+        "company_size": 15.0,
+        "business_model": 0.0,
+        "region": 5.0,
+        "buying_intent": 5.0,
+        "pain_fit": 7.5,
+        "budget": 0.0,
+        "tech_stack": 2.5
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "saas",
+        "employee_band": "11-50",
+        "region": "europe",
+        "business_model": "unknown",
+        "buying_intent": "low",
+        "budget": "none",
+        "pain_points": [
+          "data_entry"
+        ],
+        "tech_stack": [
+          "intercom"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "awaiting_review",
+      "error": null,
+      "latency_s": 0.012,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": {
+        "subject": "Re: manual data entry at Fernway",
+        "body": "Hi Tiago,\n\nThanks for reaching out about manual data entry. I had a look at Fernway's site: \"Schedule every job without the whiteboard\" is a clear pitch, and \"Made for the trades\" stood out.\n\nAcme Automation builds small, tested automations for exactly this kind of work: an agent handles the repetitive part of manual data entry, and a person on your team approves anything before it goes out.\n\nWould a 20-minute intro call next week be useful? If so, pick any time that suits you: https://cal.example.com/acme-automation/intro\n\nBest,\nJordan\nAcme Automation",
+        "generated_by": "template",
+        "model": null
+      },
+      "email_checks": {
+        "checks": {
+          "mentions_company": true,
+          "homepage_detail": false,
+          "has_cta": true,
+          "length_ok": true,
+          "no_placeholders": true,
+          "no_invented_claims": true,
+          "grounded_mentions": true
+        },
+        "passed": false,
+        "word_count": 90,
+        "homepage_facts_hit": [],
+        "invented_claims": [],
+        "placeholders": [],
+        "ungrounded_mentions": []
+      },
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E11",
+      "company": "Stallio",
+      "expected": "B",
+      "predicted": "C",
+      "correct": false,
+      "score": 32.5,
+      "why_expected": "Two-sided venue marketplace (adjacent industry, B2B and B2C), ~90 people, Spain; manual qualification of supply-side sign-ups; asks for examples (medium intent).",
+      "score_summary": "Tier C (32/100); strongest: company_size 15/15, industry_fit 7.5/15",
+      "criteria": {
+        "industry_fit": 7.5,
+        "company_size": 15.0,
+        "business_model": 0.0,
+        "region": 5.0,
+        "buying_intent": 5.0,
+        "pain_fit": 0.0,
+        "budget": 0.0,
+        "tech_stack": 0.0
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "marketplace",
+        "employee_band": "51-200",
+        "region": "europe",
+        "business_model": "unknown",
+        "buying_intent": "low",
+        "budget": "none",
+        "pain_points": [],
+        "tech_stack": [
+          "google_analytics",
+          "stripe"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "awaiting_review",
+      "error": null,
+      "latency_s": 0.012,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": {
+        "subject": "Re: your inquiry at Stallio",
+        "body": "Hi Marta,\n\nThanks for reaching out about automating parts of your workflow. I had a look at Stallio's site: \"Find the perfect venue for any event\" is a clear pitch, and \"For planners and for venues\" stood out.\n\nAcme Automation builds small, tested automations for B2B revenue and operations teams, with a human approval step so nothing goes out without your sign-off.\n\nIf it would help, I can send over a short write-up of how we would approach this. Just reply and I will send it across.\n\nBest,\nJordan\nAcme Automation",
+        "generated_by": "template",
+        "model": null
+      },
+      "email_checks": {
+        "checks": {
+          "mentions_company": true,
+          "homepage_detail": true,
+          "has_cta": true,
+          "length_ok": true,
+          "no_placeholders": true,
+          "no_invented_claims": true,
+          "grounded_mentions": true
+        },
+        "passed": true,
+        "word_count": 91,
+        "homepage_facts_hit": [
+          "venue",
+          "event",
+          "planners"
+        ],
+        "invented_claims": [],
+        "placeholders": [],
+        "ungrounded_mentions": []
+      },
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E12",
+      "company": "Pocket Ledger",
+      "expected": "C",
+      "predicted": "B",
+      "correct": false,
+      "score": 62.5,
+      "why_expected": "Tricky: very strong intent (call tomorrow, $3k budget, 3-week deadline) from a three-person consumer app. The size cap limits it to C.",
+      "score_summary": "Tier B (62/100); strongest: buying_intent 25/25, industry_fit 15/15",
+      "criteria": {
+        "industry_fit": 15.0,
+        "company_size": 0.0,
+        "business_model": 0.0,
+        "region": 5.0,
+        "buying_intent": 25.0,
+        "pain_fit": 7.5,
+        "budget": 10.0,
+        "tech_stack": 0.0
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "fintech",
+        "employee_band": "unknown",
+        "region": "india",
+        "business_model": "b2c",
+        "buying_intent": "high",
+        "budget": "stated",
+        "pain_points": [
+          "manual_follow_up"
+        ],
+        "tech_stack": [
+          "google_analytics"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "awaiting_review",
+      "error": null,
+      "latency_s": 0.013,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": {
+        "subject": "Re: manual follow-ups at Pocket Ledger",
+        "body": "Hi Vikram,\n\nThanks for reaching out about manual follow-ups. I had a look at Pocket Ledger's site: \"Get paid faster. Stress less at tax time\" is a clear pitch, and \"Made for freelancers\" stood out.\n\nAcme Automation builds small, tested automations for exactly this kind of work: an agent handles the repetitive part of manual follow-ups, and a person on your team approves anything before it goes out.\n\nWould a 20-minute intro call next week be useful? If so, pick any time that suits you: https://cal.example.com/acme-automation/intro\n\nBest,\nJordan\nAcme Automation",
+        "generated_by": "template",
+        "model": null
+      },
+      "email_checks": {
+        "checks": {
+          "mentions_company": true,
+          "homepage_detail": true,
+          "has_cta": true,
+          "length_ok": true,
+          "no_placeholders": true,
+          "no_invented_claims": true,
+          "grounded_mentions": true
+        },
+        "passed": true,
+        "word_count": 90,
+        "homepage_facts_hit": [
+          "freelancers",
+          "tax"
+        ],
+        "invented_claims": [],
+        "placeholders": [],
+        "ungrounded_mentions": []
+      },
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E13",
+      "company": "Juniper & Co",
+      "expected": "C",
+      "predicted": "disqualified",
+      "correct": false,
+      "score": 17.5,
+      "why_expected": "Branding studio (adjacent agency), 25 people, US; no concrete problem, no ask beyond curiosity.",
+      "score_summary": "Score 18/100 is below the C threshold (30): poor fit.",
+      "criteria": {
+        "industry_fit": 7.5,
+        "company_size": 0.0,
+        "business_model": 0.0,
+        "region": 5.0,
+        "buying_intent": 5.0,
+        "pain_fit": 0.0,
+        "budget": 0.0,
+        "tech_stack": 0.0
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "agency",
+        "employee_band": "unknown",
+        "region": "north_america",
+        "business_model": "unknown",
+        "buying_intent": "low",
+        "budget": "none",
+        "pain_points": [],
+        "tech_stack": [
+          "wordpress"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "disqualified",
+      "error": null,
+      "latency_s": 0.02,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": null,
+      "email_checks": null,
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E14",
+      "company": "Tidewell Outdoor",
+      "expected": "C",
+      "predicted": "C",
+      "correct": true,
+      "score": 32.5,
+      "why_expected": "Consumer e-commerce store (B2C, adjacent industry), 18 people, Canada; mild support-inbox interest, no ask.",
+      "score_summary": "Tier C (32/100); strongest: company_size 15/15, industry_fit 7.5/15",
+      "criteria": {
+        "industry_fit": 7.5,
+        "company_size": 15.0,
+        "business_model": 0.0,
+        "region": 5.0,
+        "buying_intent": 5.0,
+        "pain_fit": 0.0,
+        "budget": 0.0,
+        "tech_stack": 0.0
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "ecommerce",
+        "employee_band": "11-50",
+        "region": "north_america",
+        "business_model": "b2c",
+        "buying_intent": "low",
+        "budget": "none",
+        "pain_points": [],
+        "tech_stack": [
+          "google_analytics",
+          "shopify"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "awaiting_review",
+      "error": null,
+      "latency_s": 0.011,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": {
+        "subject": "Re: your inquiry at Tidewell Outdoor",
+        "body": "Hi Ben,\n\nThanks for reaching out about automating parts of your workflow. I had a look at Tidewell Outdoor's site: \"Gear for the long way round\" is a clear pitch, and \"Alder 2P Tent\" stood out.\n\nAcme Automation builds small, tested automations for B2B revenue and operations teams, with a human approval step so nothing goes out without your sign-off.\n\nIf it would help, I can send over a short write-up of how we would approach this. Just reply and I will send it across.\n\nBest,\nJordan\nAcme Automation",
+        "generated_by": "template",
+        "model": null
+      },
+      "email_checks": {
+        "checks": {
+          "mentions_company": true,
+          "homepage_detail": true,
+          "has_cta": true,
+          "length_ok": true,
+          "no_placeholders": true,
+          "no_invented_claims": true,
+          "grounded_mentions": true
+        },
+        "passed": true,
+        "word_count": 89,
+        "homepage_facts_hit": [
+          "outdoor",
+          "tent",
+          "gear"
+        ],
+        "invented_claims": [],
+        "placeholders": [],
+        "ungrounded_mentions": []
+      },
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E15",
+      "company": "Northgate University",
+      "expected": "C",
+      "predicted": "disqualified",
+      "correct": false,
+      "score": 10.0,
+      "why_expected": "Tricky: a real university admissions office (mentions students but is not a student project). Non-target industry and B2C, enterprise size, but real routing/follow-up pains and a concrete ask.",
+      "score_summary": "Score 10/100 is below the C threshold (30): poor fit.",
+      "criteria": {
+        "industry_fit": 0.0,
+        "company_size": 0.0,
+        "business_model": 0.0,
+        "region": 5.0,
+        "buying_intent": 5.0,
+        "pain_fit": 0.0,
+        "budget": 0.0,
+        "tech_stack": 0.0
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "education",
+        "employee_band": "unknown",
+        "region": "uk",
+        "business_model": "unknown",
+        "buying_intent": "low",
+        "budget": "none",
+        "pain_points": [],
+        "tech_stack": [
+          "google_analytics"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "disqualified",
+      "error": null,
+      "latency_s": 0.017,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": null,
+      "email_checks": null,
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E16",
+      "company": "FlowMetrics",
+      "expected": "disqualified",
+      "predicted": "disqualified",
+      "correct": true,
+      "score": 55.0,
+      "why_expected": "Tricky: great-fit company (B2B SaaS, 110 people, HubSpot/Salesforce) but the sender is an intern doing a thesis: student project disqualifier.",
+      "score_summary": "Disqualified (student_project) despite fit score 55/100.",
+      "criteria": {
+        "industry_fit": 15.0,
+        "company_size": 15.0,
+        "business_model": 10.0,
+        "region": 5.0,
+        "buying_intent": 5.0,
+        "pain_fit": 0.0,
+        "budget": 0.0,
+        "tech_stack": 5.0
+      },
+      "caps": [],
+      "disqualifiers": [
+        "student_project: A student, class, thesis, hackathon or personal hobby project rather than a business."
+      ],
+      "signals": {
+        "industry": "saas",
+        "employee_band": "51-200",
+        "region": "north_america",
+        "business_model": "b2b",
+        "buying_intent": "low",
+        "budget": "none",
+        "pain_points": [],
+        "tech_stack": [
+          "hubspot",
+          "intercom",
+          "salesforce",
+          "segment"
+        ],
+        "disqualifiers": [
+          "student_project"
+        ],
+        "extracted_by": "heuristic"
+      },
+      "status": "disqualified",
+      "error": null,
+      "latency_s": 0.014,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": null,
+      "email_checks": null,
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E17",
+      "company": "Automaton Labs",
+      "expected": "disqualified",
+      "predicted": "B",
+      "correct": false,
+      "score": 50.0,
+      "why_expected": "Tricky: strong intent and budget, but the company is an AI consultancy that builds the same agents for clients: competitor.",
+      "score_summary": "Tier B (50/100); strongest: industry_fit 15/15, company_size 15/15",
+      "criteria": {
+        "industry_fit": 15.0,
+        "company_size": 15.0,
+        "business_model": 0.0,
+        "region": 5.0,
+        "buying_intent": 15.0,
+        "pain_fit": 0.0,
+        "budget": 0.0,
+        "tech_stack": 0.0
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "saas",
+        "employee_band": "11-50",
+        "region": "north_america",
+        "business_model": "unknown",
+        "buying_intent": "medium",
+        "budget": "none",
+        "pain_points": [],
+        "tech_stack": [
+          "webflow"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "awaiting_review",
+      "error": null,
+      "latency_s": 0.013,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": {
+        "subject": "Re: your inquiry at Automaton Labs",
+        "body": "Hi Jake,\n\nThanks for reaching out about automating parts of your workflow. I had a look at Automaton Labs' site: \"AI agents, shipped in weeks\" is a clear pitch, and \"What we build\" stood out.\n\nAcme Automation builds small, tested automations for B2B revenue and operations teams, with a human approval step so nothing goes out without your sign-off.\n\nWould a 20-minute intro call next week be useful? If so, pick any time that suits you: https://cal.example.com/acme-automation/intro\n\nBest,\nJordan\nAcme Automation",
+        "generated_by": "template",
+        "model": null
+      },
+      "email_checks": {
+        "checks": {
+          "mentions_company": true,
+          "homepage_detail": true,
+          "has_cta": true,
+          "length_ok": true,
+          "no_placeholders": true,
+          "no_invented_claims": true,
+          "grounded_mentions": true
+        },
+        "passed": true,
+        "word_count": 81,
+        "homepage_facts_hit": [
+          "ai agents"
+        ],
+        "invented_claims": [],
+        "placeholders": [],
+        "ungrounded_mentions": []
+      },
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E18",
+      "company": "Codewell Solutions",
+      "expected": "disqualified",
+      "predicted": "C",
+      "correct": false,
+      "score": 40.0,
+      "why_expected": "Vendor pitch from an offshore dev shop (uses buying-signal words: 'schedule a call', '$25/hour').",
+      "score_summary": "Tier C (40/100); strongest: industry_fit 15/15, company_size 15/15",
+      "criteria": {
+        "industry_fit": 15.0,
+        "company_size": 15.0,
+        "business_model": 0.0,
+        "region": 5.0,
+        "buying_intent": 5.0,
+        "pain_fit": 0.0,
+        "budget": 0.0,
+        "tech_stack": 0.0
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "devtools",
+        "employee_band": "51-200",
+        "region": "india",
+        "business_model": "unknown",
+        "buying_intent": "low",
+        "budget": "none",
+        "pain_points": [],
+        "tech_stack": [
+          "google_analytics",
+          "wordpress"
+        ],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "awaiting_review",
+      "error": null,
+      "latency_s": 0.013,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": {
+        "subject": "Re: your inquiry at Codewell Solutions",
+        "body": "Hi Ankit,\n\nThanks for reaching out about automating parts of your workflow. I had a look at Codewell Solutions' site: \"Scale your engineering team in days, not months\" is a clear pitch.\n\nAcme Automation builds small, tested automations for B2B revenue and operations teams, with a human approval step so nothing goes out without your sign-off.\n\nIf it would help, I can send over a short write-up of how we would approach this. Just reply and I will send it across.\n\nBest,\nJordan\nAcme Automation",
+        "generated_by": "template",
+        "model": null
+      },
+      "email_checks": {
+        "checks": {
+          "mentions_company": true,
+          "homepage_detail": false,
+          "has_cta": true,
+          "length_ok": true,
+          "no_placeholders": true,
+          "no_invented_claims": true,
+          "grounded_mentions": true
+        },
+        "passed": false,
+        "word_count": 85,
+        "homepage_facts_hit": [],
+        "invented_claims": [],
+        "placeholders": [],
+        "ungrounded_mentions": []
+      },
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E19",
+      "company": "Emily Watson",
+      "expected": "disqualified",
+      "predicted": "disqualified",
+      "correct": true,
+      "score": 7.5,
+      "why_expected": "Job seeker on a free email address, no company website.",
+      "score_summary": "Disqualified (job_seeker) despite fit score 8/100.",
+      "criteria": {
+        "industry_fit": 0.0,
+        "company_size": 0.0,
+        "business_model": 0.0,
+        "region": 0.0,
+        "buying_intent": 5.0,
+        "pain_fit": 0.0,
+        "budget": 0.0,
+        "tech_stack": 2.5
+      },
+      "caps": [],
+      "disqualifiers": [
+        "job_seeker: A job, internship or freelance-work application rather than a buying inquiry."
+      ],
+      "signals": {
+        "industry": "other",
+        "employee_band": "unknown",
+        "region": "unknown",
+        "business_model": "unknown",
+        "buying_intent": "low",
+        "budget": "none",
+        "pain_points": [],
+        "tech_stack": [
+          "hubspot"
+        ],
+        "disqualifiers": [
+          "job_seeker"
+        ],
+        "extracted_by": "heuristic"
+      },
+      "status": "disqualified",
+      "error": null,
+      "latency_s": 0.007,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": null,
+      "email_checks": null,
+      "judge": null,
+      "judge_cost_usd": 0.0
+    },
+    {
+      "id": "E20",
+      "company": "Crumb & Co",
+      "expected": "disqualified",
+      "predicted": "disqualified",
+      "correct": true,
+      "score": 10.0,
+      "why_expected": "Local bakery (hospitality, 6 people, B2C) asking for an unrelated service: score below the C threshold.",
+      "score_summary": "Score 10/100 is below the C threshold (30): poor fit.",
+      "criteria": {
+        "industry_fit": 0.0,
+        "company_size": 0.0,
+        "business_model": 0.0,
+        "region": 5.0,
+        "buying_intent": 5.0,
+        "pain_fit": 0.0,
+        "budget": 0.0,
+        "tech_stack": 0.0
+      },
+      "caps": [],
+      "disqualifiers": [],
+      "signals": {
+        "industry": "hospitality",
+        "employee_band": "unknown",
+        "region": "uk",
+        "business_model": "b2c",
+        "buying_intent": "low",
+        "budget": "none",
+        "pain_points": [],
+        "tech_stack": [],
+        "disqualifiers": [],
+        "extracted_by": "heuristic"
+      },
+      "status": "disqualified",
+      "error": null,
+      "latency_s": 0.009,
+      "usage": [],
+      "pipeline_cost_usd": 0,
+      "draft": null,
+      "email_checks": null,
+      "judge": null,
+      "judge_cost_usd": 0.0
+    }
+  ]
+}

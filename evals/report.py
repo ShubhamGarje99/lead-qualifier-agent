@@ -176,7 +176,7 @@ def _mode_section(mode: str, r: dict[str, Any]) -> list[str]:
     if by_node:
         out.append("- By node: " + ", ".join(f"{n} ${v:.4f}" for n, v in sorted(by_node.items())))
     if mode == "offline":
-        out.append("- Offline mode makes no LLM calls, so its cost is genuinely $0.")
+        out.append("- Offline mode makes no LLM calls, so its cost is $0.")
     out.append("")
     return out
 
@@ -248,7 +248,7 @@ def write_report(results_dir: Path, path: Path) -> Path:
         "",
         "```bash",
         "make eval       # offline: no key needed, deterministic",
-        "make eval-llm   # needs ANTHROPIC_API_KEY in .env; costs a few cents",
+        "make eval-llm   # needs ANTHROPIC_API_KEY in .env; spends API tokens (cost is reported per lead)",
         "uv run python -m evals.run --report-only   # rebuild this file from saved results",
         "```",
         "",

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lead approvals · leadq</title>
+  <style>
+    :root {
+      --bg: #f6f7f9; --panel: #ffffff; --text: #1d2330; --muted: #667085; --line: #e4e7ec;
+      --accent: #3b5bdb; --ok: #2b8a3e; --bad: #c92a2a; --warn: #e67700;
+      --A: #2b8a3e; --B: #e67700; --C: #1971c2; --D: #c92a2a;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #111418; --panel: #1a1f26; --text: #e6e8eb; --muted: #98a2b3; --line: #2c333d; --accent: #748ffc; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+    header.top { display: flex; align-items: center; gap: 12px; padding: 16px 24px; border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 2; }
+    header.top h1 { font-size: 18px; margin: 0; }
+    .pill { font-size: 12px; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+    .pill.mode-offline { color: var(--warn); border-color: var(--warn); }
+    .pill.mode-llm { color: var(--ok); border-color: var(--ok); }
+    .spacer { flex: 1; }
+    main { max-width: 1040px; margin: 0 auto; padding: 20px 16px 60px; }
+    .flash { background: var(--panel); border-left: 4px solid var(--accent); padding: 10px 14px; margin-bottom: 18px; border-radius: 6px; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 22px; overflow: hidden; }
+    .card-head { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+    .tier { font-weight: 700; min-width: 46px; height: 46px; border-radius: 10px; display: grid; place-items: center; color: #fff; font-size: 20px; }
+    .tier-A { background: var(--A); } .tier-B { background: var(--B); } .tier-C { background: var(--C); } .tier-disqualified { background: var(--D); font-size: 11px; }
+    .who h2 { margin: 0; font-size: 17px; }
+    .who .meta { color: var(--muted); font-size: 13px; }
+    .score { margin-left: auto; text-align: right; }
+    .score b { font-size: 22px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+    @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+    .col { padding: 14px 18px; }
+    .col + .col { border-left: 1px solid var(--line); }
+    @media (max-width: 820px) { .col + .col { border-left: 0; border-top: 1px solid var(--line); } }
+    blockquote { margin: 0 0 12px; padding: 8px 12px; border-left: 3px solid var(--line); color: var(--muted); font-style: italic; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; }
+    .bar { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin-top: 3px; }
+    .bar span { display: block; height: 100%; background: var(--accent); }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+    .chip { font-size: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 1px 8px; }
+    .note { font-size: 13px; color: var(--bad); margin: 6px 0; }
+    label { font-size: 12px; color: var(--muted); display: block; margin: 8px 0 3px; }
+    input[type=text], textarea { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--text); font: inherit; }
+    textarea { min-height: 260px; font-size: 14px; line-height: 1.45; }
+    .actions { display: flex; gap: 10px; align-items: flex-end; margin-top: 12px; flex-wrap: wrap; }
+    button { border: 0; border-radius: 6px; padding: 9px 16px; font-weight: 600; cursor: pointer; font: inherit; }
+    .approve { background: var(--ok); color: #fff; }
+    .reject { background: transparent; color: var(--bad); border: 1px solid var(--bad); }
+    .reject-form { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
+    .reject-form input { flex: 1; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .empty { text-align: center; padding: 50px 20px; color: var(--muted); background: var(--panel); border: 1px dashed var(--line); border-radius: 10px; }
+    code { font-size: 12px; }
+    h3.section { font-size: 14px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 30px 0 10px; }
+  </style>
+</head>
+<body>
+<header class="top">
+  <h1>Lead approvals</h1>
+  <span class="pill mode-{{ 'offline' if mode == 'offline' else 'llm' }}">{{ 'OFFLINE mode · heuristics + templates' if mode == 'offline' else 'LLM mode · ' ~ mode }}</span>
+  <span class="spacer"></span>
+  <span class="pill">{{ cards|length }} pending</span>
+  <span class="pill">{{ totals.runs }} runs · ${{ '%.4f'|format(totals.cost_usd) }} LLM cost</span>
+  <span class="pill">CRM: {{ crm_backend }} · notify: {{ notifier }}</span>
+</header>
+<main>
+  {% if flash %}<div class="flash">{{ flash }}</div>{% endif %}
+
+  {% if not cards %}
+    <div class="empty">Nothing awaiting review. Ingest leads with <code>leadq ingest data/leads.sample.csv</code> or POST to <code>/webhook/lead</code>.</div>
+  {% endif %}
+
+  {% for c in cards %}
+  {% set lead = c.lead %}{% set s = c.score %}{% set sig = c.signals %}
+  <article class="card" id="{{ c.thread_id }}">
+    <div class="card-head">
+      <div class="tier tier-{{ s.tier }}">{{ s.tier }}</div>
+      <div class="who">
+        <h2>{{ lead.name }} · {{ lead.company or '—' }}</h2>
+        <div class="meta">{{ lead.title or '' }} &lt;{{ lead.email }}&gt; · source: {{ lead.source }} ·
+          {% if c.site.found %}<a href="{{ c.site.url }}" target="_blank" rel="noopener">{{ c.site.title }}</a>{% else %}no homepage{% endif %}</div>
+        <div class="meta">thread <code>{{ c.thread_id }}</code> · extracted by {{ sig.extracted_by }} · draft by {{ c.draft.generated_by }} · run cost ${{ '%.4f'|format(c.cost_usd) }}</div>
+      </div>
+      <div class="score"><b>{{ '%.0f'|format(s.score) }}</b><span class="muted">/100</span></div>
+    </div>
+    <div class="grid">
+      <div class="col">
+        <blockquote>“{{ lead.message or '(no message)' }}”</blockquote>
+        <table>
+          <tr><th>Criterion</th><th>Points</th><th>Why</th></tr>
+          {% for cr in s.criteria %}
+          <tr>
+            <td>{{ cr.name|replace('_', ' ') }}</td>
+            <td>{{ '%g'|format(cr.points) }}/{{ '%g'|format(cr.weight) }}
+              <div class="bar"><span style="width: {{ (100 * cr.points / cr.weight) if cr.weight else 0 }}%"></span></div></td>
+            <td>{{ cr.reason }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% for line in s.caps %}<div class="note">⚑ {{ line }}</div>{% endfor %}
+        <div class="chips">
+          <span class="chip">{{ sig.industry }}</span><span class="chip">{{ sig.employee_band }} people</span>
+          <span class="chip">{{ sig.region|replace('_', ' ') }}</span><span class="chip">{{ sig.business_model }}</span>
+          <span class="chip">intent: {{ sig.buying_intent }}</span><span class="chip">urgency: {{ sig.urgency }}</span>
+          <span class="chip">budget: {{ sig.budget }}</span>
+          {% for t in sig.tech_stack %}<span class="chip">{{ t }}</span>{% endfor %}
+        </div>
+        {% if sig.homepage_highlights %}
+        <div class="muted">Homepage: {% for h in sig.homepage_highlights %}“{{ h }}”{% if not loop.last %} · {% endif %}{% endfor %}</div>
+        {% endif %}
+      </div>
+      <div class="col">
+        <form method="post" action="/approvals/{{ c.thread_id }}/approve">
+          <label for="subject-{{ loop.index }}">Subject</label>
+          <input type="text" id="subject-{{ loop.index }}" name="subject" value="{{ c.draft.subject }}">
+          <label for="body-{{ loop.index }}">Reply (edit freely; edits are recorded as "edit")</label>
+          <textarea id="body-{{ loop.index }}" name="body">{{ c.draft.body }}</textarea>
+          <div class="actions">
+            <div style="flex:1"><label for="reviewer-{{ loop.index }}">Reviewer</label>
+              <input type="text" id="reviewer-{{ loop.index }}" name="reviewer" value="reviewer"></div>
+            <button class="approve" type="submit">Approve &amp; send to CRM</button>
+          </div>
+        </form>
+        <form class="reject-form" method="post" action="/approvals/{{ c.thread_id }}/reject">
+          <input type="text" name="reason" placeholder="Reason for rejecting (optional)">
+          <button class="reject" type="submit">Reject</button>
+        </form>
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+
+  {% if recent %}
+  <h3 class="section">Recent outcomes</h3>
+  <div class="card"><div class="col">
+    <table>
+      <tr><th>Lead</th><th>Company</th><th>Status</th><th>Tier</th><th>Score</th><th>Tokens</th><th>Cost</th><th>Thread</th></tr>
+      {% for r in recent %}
+      <tr><td>{{ r.name }}</td><td>{{ r.company or '—' }}</td><td>{{ r.status }}</td><td>{{ r.tier or '—' }}</td>
+        <td>{{ '%.0f'|format(r.score or 0) }}</td><td>{{ (r.input_tokens or 0) + (r.output_tokens or 0) }}</td>
+        <td>${{ '%.4f'|format(r.cost_usd or 0) }}</td><td><code>{{ r.thread_id }}</code></td></tr>
+      {% endfor %}
+    </table>
+  </div></div>
+  {% endif %}
+</main>
+</body>
+</html>

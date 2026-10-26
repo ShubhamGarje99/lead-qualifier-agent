@@ -1,0 +1,30 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.pytest_cache/
+
+# Virtual environments
+.venv
+
+# Runtime state: checkpoints, CRM mock, run store, outbox
+var/
+outbox/
+*.sqlite
+*.sqlite3
+*.sqlite-shm
+*.sqlite-wal
+*.db
+
+# Run artifacts (eval results JSON in evals/results/ is committed on purpose)
+runs/
+*.log
+.DS_Store

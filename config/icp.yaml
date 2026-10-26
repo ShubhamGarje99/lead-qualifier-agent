@@ -1,0 +1,117 @@
+# Ideal Customer Profile (ICP) rubric.
+#
+# Scoring is deterministic and explainable: every criterion reads one field of
+# the extracted Signals, awards `weight * credit` points, and records why.
+# The total is normalised to 0-100, then disqualifiers, tier caps and tier
+# thresholds are applied. Edit this file to fit your business; no code changes.
+#
+# The seller below is fictional (a small AI-automation studio selling workflow
+# automation to B2B revenue/ops teams).
+
+seller:
+  name: Acme Automation
+  sender_name: Jordan
+  offering: >-
+    Workflow automation for B2B revenue and operations teams: inbound lead
+    routing and qualification, CRM data hygiene, automated follow-ups,
+    support-ticket triage and reporting, built as small, tested AI agents
+    with human approval steps.
+  calendar_url: https://cal.example.com/acme-automation/intro
+
+tiers:            # minimum normalised score for each tier
+  A: 75
+  B: 50
+  C: 30           # below C -> "disqualified" (poor fit)
+
+criteria:
+  industry_fit:
+    field: industry
+    kind: match
+    weight: 15
+    target: [saas, fintech, devtools, martech, logistics_tech, healthtech]
+    partial: [ecommerce, professional_services, marketplace, agency]
+    partial_credit: 0.5
+    description: Software and tech-enabled companies are the core market.
+
+  company_size:
+    field: employee_band
+    kind: match
+    weight: 15
+    target: ["11-50", "51-200", "201-500"]
+    partial: ["501-1000", "1001+"]
+    partial_credit: 0.5
+    description: 11-500 people is the sweet spot; enterprises buy slower.
+
+  business_model:
+    field: business_model
+    kind: match
+    weight: 10
+    target: [b2b]
+    partial: [both]
+    partial_credit: 0.5
+    description: Our automations target B2B sales and ops workflows.
+
+  region:
+    field: region
+    kind: match
+    weight: 5
+    target: [north_america, europe, uk, india, anz]
+    description: Regions we can serve within working-hour overlap.
+
+  buying_intent:
+    field: buying_intent
+    kind: levels
+    weight: 25
+    levels: {high: 1.0, medium: 0.6, low: 0.2, none: 0.0}
+    description: Explicit asks, timelines and budget beat vague curiosity.
+
+  pain_fit:
+    field: pain_points
+    kind: multi
+    weight: 15
+    target: [lead_routing, crm_hygiene, manual_follow_up, support_triage, reporting, data_entry]
+    per_match: 0.5   # two matching pains = full credit
+    description: Stated pains we actually solve.
+
+  budget:
+    field: budget
+    kind: levels
+    weight: 10
+    levels: {stated: 1.0, implied: 0.5, none: 0.0}
+    description: A stated budget shortens the sales cycle.
+
+  tech_stack:
+    field: tech_stack
+    kind: multi
+    weight: 5
+    target: [hubspot, salesforce, slack, zapier, pipedrive, intercom, zendesk]
+    per_match: 0.5
+    description: Tools we already have integrations for.
+
+# Hard disqualifiers: any match -> tier "disqualified", regardless of score.
+# `description` is given to the LLM extractor; `keywords` drive the offline
+# heuristic extractor (matched case-insensitively against message + homepage).
+disqualifiers:
+  student_project:
+    description: A student, class, thesis, hackathon or personal hobby project rather than a business.
+    keywords: [i'm a student, i am a student, as a student, student project, university project, college project, class project, course project, final year project, thesis, dissertation, hackathon, hobby project, personal project, my professor]
+    scope: message
+  competitor:
+    description: An AI/automation agency or consultancy that sells the same services we do.
+    keywords: [ai automation agency, automation agency, ai agency, automation consultancy, we build ai agents for, custom ai agents for clients, workflow automation for our clients, white-label automation]
+    scope: both
+  vendor_pitch:
+    description: The sender is pitching their own services (SEO, outsourcing, lead lists, dev shop) instead of buying.
+    keywords: [our services include, seo services, increase your traffic, guest post, lead lists, offshore development, outsourcing partner, help you rank, backlinks, our agency can, white-label development]
+    scope: message
+  job_seeker:
+    description: A job, internship or freelance-work application rather than a buying inquiry.
+    keywords: [my resume, my cv, internship, job opening, looking for a job, apply for a position, apply for the role, join your team, position at your]
+    scope: message
+
+# Caps limit the best possible tier when a condition holds.
+tier_caps:
+  - field: employee_band
+    values: ["1-10"]
+    max_tier: C
+    reason: Below minimum company size (1-10 people); low-touch nurture only.

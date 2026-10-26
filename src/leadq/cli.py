@@ -10,7 +10,9 @@ from typing import Optional
 
 import typer
 from pydantic import ValidationError
+from rich import box
 from rich.console import Console
+from rich.markup import escape
 from rich.panel import Panel
 from rich.table import Table
 
@@ -50,12 +52,16 @@ def _fail(msg: str, code: int = 2) -> None:
     raise typer.Exit(code)
 
 
+def _styled(text: str, style: str | None) -> str:
+    return f"[{style}]{escape(text)}[/]" if style else escape(text)
+
+
 def _tier(t: str | None) -> str:
-    return f"[{TIER_STYLE.get(t or '', '')}]{t or '-'}[/]"
+    return _styled("DQ" if t == "disqualified" else (t or "-"), TIER_STYLE.get(t or ""))
 
 
 def _status(s: str | None) -> str:
-    return f"[{STATUS_STYLE.get(s or '', '')}]{s or '-'}[/]"
+    return _styled((s or "-").replace("_", " "), STATUS_STYLE.get(s or ""))
 
 
 def _money(x: float | None) -> str:
@@ -90,9 +96,14 @@ def ingest(
     except MissingAPIKeyError as exc:
         _fail(str(exc))
     _mode_banner(settings, resolved)
-    table = Table(title=f"Ingest: {path.name}", show_lines=False)
-    for col in ("lead", "company", "tier", "score", "status", "tokens", "cost", "thread"):
-        table.add_column(col, justify="right" if col in {"score", "tokens", "cost"} else "left")
+    table = Table(title=f"Ingest: {path.name}", box=box.SIMPLE_HEAD)
+    table.add_column("thread", no_wrap=True)
+    table.add_column("lead", min_width=12)
+    table.add_column("tier", no_wrap=True)
+    table.add_column("score", justify="right", no_wrap=True)
+    table.add_column("status")
+    table.add_column("tokens", justify="right", no_wrap=True)
+    table.add_column("cost", justify="right", no_wrap=True)
     totals = {"n": 0, "tok": 0, "cost": 0.0, "dup": 0, "bad": 0}
     with _qualifier(settings) as q, open(path, newline="", encoding="utf-8") as fh:
         for i, row in enumerate(csv.DictReader(fh), start=2):
@@ -110,12 +121,13 @@ def ingest(
                 totals["cost"] += r["cost_usd"] or 0
             status = "duplicate (skipped)" if r["duplicate"] else r["status"]
             table.add_row(
-                r["name"], r["company"] or "-", _tier(r["tier"]), f"{r['score'] or 0:.1f}", _status(status),
-                str(tok), _money(r["cost_usd"]), r["thread_id"],
+                r["thread_id"], escape(f"{r['name']} · {r['company'] or '-'}"), _tier(r["tier"]), f"{r['score'] or 0:.1f}",
+                _status(status), str(tok), _money(r["cost_usd"]),
             )
             if r.get("error"):
                 console.print(f"[red]{r['thread_id']} failed:[/] {r['error']}")
     console.print(table)
+    console.print("tier DQ = disqualified (archived, no draft)")
     console.print(
         f"Processed {totals['n']} leads ({totals['dup']} duplicates, {totals['bad']} invalid rows). "
         f"Tokens: {totals['tok']:,}. LLM cost this run: [bold]{_money(totals['cost'])}[/]."
@@ -131,37 +143,41 @@ def pending(tier: Optional[str] = typer.Option(None, help="Filter by tier (A/B/C
     if not cards:
         console.print("No runs awaiting review.")
         return
-    table = Table(title="Awaiting human review")
-    for col in ("thread", "lead", "company", "tier", "score", "subject"):
-        table.add_column(col)
+    table = Table(title="Awaiting human review", box=box.SIMPLE_HEAD)
+    table.add_column("thread", no_wrap=True)
+    table.add_column("lead")
+    table.add_column("tier", no_wrap=True)
+    table.add_column("score", justify="right", no_wrap=True)
+    table.add_column("draft subject")
     for c in cards:
-        table.add_row(c["thread_id"], c["lead"]["name"], c["lead"]["company"], _tier(c["score"]["tier"]),
-                      f"{c['score']['score']:.1f}", c["draft"]["subject"])
+        table.add_row(c["thread_id"], escape(f"{c['lead']['name']} · {c['lead']['company'] or '-'}"), _tier(c["score"]["tier"]),
+                      f"{c['score']['score']:.1f}", escape(c["draft"]["subject"]))
     console.print(table)
 
 
 def _print_card(card: dict) -> None:
     lead, score, sig, draft = card["lead"], card["score"], card["signals"], card["draft"]
+    e = {k: escape(str(v or "")) for k, v in lead.items()}  # lead data is untrusted: never parse it as markup
     head = (
-        f"[bold]{lead['name']}[/] <{lead['email']}>  {lead.get('title') or ''}\n"
-        f"[bold]{lead['company']}[/]  {lead.get('website') or ''}   source: {lead.get('source')}\n\n"
-        f"[italic]\"{lead.get('message') or '(no message)'}\"[/]"
+        f"[bold]{e['name']}[/] <{e['email']}>  {e.get('title', '')}\n"
+        f"[bold]{e['company']}[/]  {e.get('website', '')}   source: {e.get('source', '')}\n\n"
+        f"[italic]\"{e.get('message') or '(no message)'}\"[/]"
     )
     console.print(Panel(head, title=f"{card['thread_id']}  ·  tier {_tier(score['tier'])}  ·  {score['score']:.1f}/100", border_style="blue"))
     t = Table(title="Score breakdown", show_header=True)
     for col in ("criterion", "points", "value", "reason"):
         t.add_column(col)
     for c in score["criteria"]:
-        t.add_row(c["name"], f"{c['points']:g}/{c['weight']:g}", c["value"], c["reason"])
+        t.add_row(c["name"], f"{c['points']:g}/{c['weight']:g}", escape(c["value"]), escape(c["reason"]))
     console.print(t)
     for line in score.get("disqualifiers", []) + score.get("caps", []):
-        console.print(f"[red]• {line}[/]")
-    console.print(
+        console.print(f"[red]• {escape(line)}[/]")
+    console.print(escape(
         f"signals ({sig['extracted_by']}): industry={sig['industry']} size={sig['employee_band']} region={sig['region']} "
         f"model={sig['business_model']} intent={sig['buying_intent']} budget={sig['budget']} tech={', '.join(sig['tech_stack']) or '-'}"
-    )
+    ))
     if draft:
-        console.print(Panel(f"[bold]Subject:[/] {draft['subject']}\n\n{draft['body']}",
+        console.print(Panel(f"[bold]Subject:[/] {escape(draft['subject'])}\n\n{escape(draft['body'])}",
                             title=f"Draft ({draft['generated_by']})", border_style="green"))
     console.print(f"Run cost so far: {_money(card.get('cost_usd'))}")
 
@@ -224,7 +240,7 @@ def review(
         except NotPendingError as exc:
             _fail(str(exc), code=1)
         outcome = q.card(thread_id).get("outcome") or {}
-    console.print(f"{thread_id}: {_status(result['status'])}  {json.dumps({k: v for k, v in outcome.items() if k not in {'final_body'}})}")
+    console.print(f"{thread_id}: {_status(result['status'])}  " + escape(json.dumps({k: v for k, v in outcome.items() if k != "final_body"})))
 
 
 @app.command("approve-all")
@@ -243,7 +259,7 @@ def approve_all(
             raise typer.Abort()
         for c in cards:
             r = q.resume(c["thread_id"], ReviewDecision(action="approve", reviewer=reviewer))
-            console.print(f"{c['thread_id']} {c['lead']['company']}: {_status(r['status'])}")
+            console.print(f"{c['thread_id']} {escape(c['lead']['company'])}: {_status(r['status'])}")
 
 
 @app.command()
@@ -252,11 +268,15 @@ def runs() -> None:
     with _qualifier(_settings()) as q:
         rows = q.runs()
         totals = q.store.totals()
-    table = Table(title="Runs")
-    for col in ("thread", "lead", "company", "mode", "status", "tier", "score", "in tok", "out tok", "LLM calls", "cost"):
-        table.add_column(col, justify="right" if col in {"score", "in tok", "out tok", "LLM calls", "cost"} else "left")
+    table = Table(title="Runs", box=box.SIMPLE_HEAD)
+    table.add_column("thread", no_wrap=True)
+    table.add_column("lead")
+    for col in ("mode", "status", "tier"):
+        table.add_column(col, no_wrap=True)
+    for col in ("score", "in tok", "out tok", "calls", "cost"):
+        table.add_column(col, justify="right", no_wrap=True)
     for r in rows:
-        table.add_row(r["thread_id"], r["name"], r["company"] or "-", r["mode"], _status(r["status"]), _tier(r["tier"]),
+        table.add_row(r["thread_id"], escape(f"{r['name']} · {r['company'] or '-'}"), r["mode"], _status(r["status"]), _tier(r["tier"]),
                       f"{r['score'] or 0:.1f}", str(r["input_tokens"]), str(r["output_tokens"]), str(r["llm_calls"]), _money(r["cost_usd"]))
     console.print(table)
     n = max(totals["runs"], 1)
@@ -277,7 +297,7 @@ def show(thread_id: str) -> None:
     for col in ("at", "node", "event"):
         t.add_column(col)
     for e in card["events"]:
-        t.add_row(e["at"], e["node"], e["message"])
+        t.add_row(e["at"], e["node"], escape(e["message"]))
     console.print(t)
     if card.get("outcome"):
         console.print_json(json.dumps({k: v for k, v in card["outcome"].items() if k != "final_body"}))
@@ -303,14 +323,14 @@ def crm() -> None:
     for col in ("id", "email", "company", "tier", "score", "industry", "size", "region", "updated"):
         t.add_column(col)
     for c in db.contacts():
-        t.add_row(str(c["id"]), c["email"], c["company"], _tier(c["tier"]), f"{c['score']:.1f}", c["industry"],
+        t.add_row(str(c["id"]), escape(c["email"]), escape(c["company"] or ""), _tier(c["tier"]), f"{c['score']:.1f}", c["industry"],
                   c["employee_band"], c["region"], c["updated_at"])
     console.print(t)
     d = Table(title="Deals")
     for col in ("id", "contact", "name", "stage", "tier", "thread"):
         d.add_column(col)
     for x in db.deals():
-        d.add_row(str(x["id"]), str(x["contact_id"]), x["name"], x["stage"], _tier(x["tier"]), x["thread_id"])
+        d.add_row(str(x["id"]), str(x["contact_id"]), escape(x["name"]), x["stage"], _tier(x["tier"]), x["thread_id"])
     console.print(d)
     console.print(f"{len(db.notes())} notes (qualification + approved outbound email per lead)")
 
@@ -329,7 +349,7 @@ def outbox(n: int = typer.Option(5, help="Show the last N notifications")) -> No
         for b in blocks:
             if b.get("type") == "section" and "text" in b:
                 lines.append(b["text"]["text"])
-        console.print(Panel("\n\n".join(lines), title=f"{e['channel']} · {e['at']}", border_style="magenta"))
+        console.print(Panel(escape("\n\n".join(lines)), title=f"{e['channel']} · {e['at']}", border_style="magenta"))
 
 
 @app.command()

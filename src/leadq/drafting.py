@@ -10,6 +10,9 @@ from .heuristics import PAIN_PHRASES
 from .models import Draft, Lead, ScoreResult, Signals, SiteProfile
 from .rubric import Rubric
 
+INTEGRATIONS = {"hubspot": "HubSpot", "salesforce": "Salesforce", "slack": "Slack", "zapier": "Zapier",
+                "pipedrive": "Pipedrive", "intercom": "Intercom", "zendesk": "Zendesk"}
+
 CTA_BY_TIER = {
     "A": "Would you be open to a 30-minute call this week to map out a first version? You can grab a slot here: {calendar_url}",
     "B": "Would a 20-minute intro call next week be useful? If so, pick any time that suits you: {calendar_url}",
@@ -23,6 +26,10 @@ def _join(items: list[str]) -> str:
     return ", ".join(items[:-1]) + " and " + items[-1]
 
 
+def _possessive(name: str) -> str:
+    return f"{name}'" if name.endswith("s") else f"{name}'s"
+
+
 def _homepage_line(lead: Lead, site: SiteProfile, signals: Signals) -> str:
     company = lead.company or "your team"
     if site.found and site.headline():
@@ -31,7 +38,7 @@ def _homepage_line(lead: Lead, site: SiteProfile, signals: Signals) -> str:
             (h for h in signals.homepage_highlights if h != site.headline() and h != site.meta_description),
             "",
         )
-        line = f'I had a look at {company}\'s site: "{headline}" is a clear pitch'
+        line = f'I had a look at {_possessive(company)} site: "{headline}" is a clear pitch'
         if detail:
             line += f', and "{detail.rstrip(".")}" stood out'
         return line + "."
@@ -42,7 +49,9 @@ def template_draft(lead: Lead, site: SiteProfile, signals: Signals, score: Score
     seller = rubric.seller
     pains = [PAIN_PHRASES[p] for p in signals.pain_points if p in PAIN_PHRASES]
     topic = _join(pains[:2]) if pains else "automating parts of your workflow"
-    tools = [t for t in signals.tech_stack if t in {"hubspot", "salesforce", "slack", "zapier", "pipedrive", "intercom", "zendesk"}]
+    # Only echo tools the lead actually named; site-detected tech (tracking scripts) is not "mentioned".
+    message = lead.message.lower()
+    tools = [t for t in signals.tech_stack if t in INTEGRATIONS and t in message]
 
     para1 = f"Thanks for reaching out about {topic}. " + _homepage_line(lead, site, signals)
     if pains:
@@ -57,9 +66,10 @@ def template_draft(lead: Lead, site: SiteProfile, signals: Signals, score: Score
             "with a human approval step so nothing goes out without your sign-off."
         )
     if tools:
-        para2 += f" Since you mentioned {_join([t.title() if t != 'hubspot' else 'HubSpot' for t in tools])}, we would plug into what you already use."
-    if signals.budget_note and signals.budget != "none" and score.tier == "A":
-        para2 += " Thanks also for sharing the budget and timeline; that makes it much easier to scope."
+        para2 += f" Since you mentioned {_join([INTEGRATIONS[t] for t in tools])}, we would plug into what you already use."
+    if signals.budget == "stated" and score.tier == "A":
+        shared = "budget and timeline" if signals.urgency != "low" else "budget"
+        para2 += f" Thanks also for sharing your {shared}; that makes it much easier to scope."
 
     tier = score.tier if score.tier in CTA_BY_TIER else "C"
     cta = CTA_BY_TIER[tier].format(calendar_url=seller.calendar_url)
